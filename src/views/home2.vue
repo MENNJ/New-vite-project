@@ -71,7 +71,7 @@
       </div>
 
       <div class="h-[100vh] mt-[20px] ">
-        <video class="w-[80vw]  rounded-2xl " autoplay="autoplay" loop="loop" muted="muted" src="../assets/video/large_2x.mp4"/>
+        <video class="w-[80vw]  rounded-2xl " autoplay="autoplay" loop="loop" muted="muted" src="../assets/large_2x.mp4"/>
       </div>
 
 
