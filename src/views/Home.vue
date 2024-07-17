@@ -134,6 +134,7 @@ onMounted(() => {
       this.mouseY = y;
     }
   };
+
   photobox.init();
 });
 </script>
