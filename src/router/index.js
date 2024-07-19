@@ -45,7 +45,13 @@ const routes =  [
         meta:{
             shovalues: true
         }
-    }
+    },
+    {
+        path: '/index',
+        name: 'index',
+        component: () => import('../views/index.vue'),
+    },
+
 ]
 
 const router = createRouter({
