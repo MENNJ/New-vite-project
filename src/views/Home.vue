@@ -140,6 +140,9 @@ onMounted(() => {
 </script>
 
 <style>
+html{
+  overflow: hidden;
+}
 * {
   padding: 0;
   margin: 0;
