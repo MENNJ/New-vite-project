@@ -25,7 +25,7 @@
 
 <script setup>
 import { Starport } from "vue-starport";
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 import { gsap } from 'gsap';
 import pubUse from '../utils/pub-use';
 
@@ -37,117 +37,129 @@ const lines = ref([
 ]);
 
 const photos = ref(null);
+let isMoving = false;
+let mouseX = 0;
+let mouseY = 0;
+
+const photobox = {
+  container: null,
+  imgData: [],
+  containerWidth: 0,
+  containerHeight: 0,
+  photoWidth: 0,
+  photoHeight: 0,
+  scaleNums: 1,
+  init() {
+    this.container = photos.value;
+    this.resize();
+    window.addEventListener("resize", this.resize.bind(this));
+    this.container.addEventListener("mousedown", this.onMouseDown.bind(this));
+    this.container.addEventListener("mouseup", this.onMouseUp.bind(this));
+    this.container.addEventListener("mouseleave", this.onMouseUp.bind(this));
+    this.container.addEventListener("mousemove", this.onMouseMove.bind(this));
+    this.container.addEventListener("touchstart", this.onTouchStart.bind(this));
+    this.container.addEventListener("touchend", this.onMouseUp.bind(this));
+    this.container.addEventListener("touchmove", this.onTouchMove.bind(this));
+  },
+  resize() {
+    const imgs = [...this.container.querySelectorAll(".photos_line_photo")];
+    this.containerWidth = this.container.offsetWidth;
+    this.containerHeight = this.container.offsetHeight;
+    this.photoWidth = imgs[0].offsetWidth;
+    this.photoHeight = imgs[0].offsetHeight;
+    this.scaleNums = document.body.offsetWidth / 1440;
+    this.container.style.transform = `scale(${this.scaleNums})`;
+    gsap.to(imgs, { transform: `translate(0,0)`, duration: 0, ease: 'power4.out' });
+    this.imgData = imgs.map(img => ({
+      node: img,
+      x: img.offsetLeft,
+      y: img.offsetTop,
+      movX: 0,
+      movY: 0,
+      ani: null
+    }));
+  },
+  onMouseDown(event) {
+    isMoving = true;
+    mouseX = event.clientX;
+    mouseY = event.clientY;
+  },
+  onMouseUp() {
+    isMoving = false;
+  },
+  onMouseMove(event) {
+    if (!isMoving) return;
+    requestAnimationFrame(() => this.move(event.clientX, event.clientY));
+  },
+  onTouchStart(event) {
+    isMoving = true;
+    mouseX = event.touches[0].clientX;
+    mouseY = event.touches[0].clientY;
+  },
+  onTouchMove(event) {
+    if (!isMoving) return;
+    requestAnimationFrame(() => this.move(event.touches[0].clientX, event.touches[0].clientY));
+  },
+  move(x, y) {
+    if (!isMoving) return;
+    const distanceX = (x - mouseX) / this.scaleNums;
+    const distanceY = (y - mouseY) / this.scaleNums;
+    this.imgData.forEach(img => {
+      let duration = 1;
+      img.movX += distanceX;
+      if (img.x + img.movX > this.containerWidth) {
+        img.movX -= this.containerWidth;
+        duration = 0;
+      }
+      if (img.x + img.movX < -this.photoWidth) {
+        img.movX += this.containerWidth;
+        duration = 0;
+      }
+      img.movY += distanceY;
+      if (img.y + img.movY > this.containerHeight) {
+        img.movY -= this.containerHeight;
+        duration = 0;
+      }
+      if (img.y + img.movY < -this.photoHeight) {
+        img.movY += this.containerHeight;
+        duration = 0;
+      }
+      if (img.ani) img.ani.kill();
+      img.ani = gsap.to(img.node, {
+        transform: `translate(${img.movX}px,${img.movY}px)`,
+        duration: duration,
+        ease: 'power4.out'
+      });
+    });
+    mouseX = x;
+    mouseY = y;
+  }
+};
 
 onMounted(() => {
-  const photobox = {
-    container: photos.value,
-    imgData: [],
-    containerWidth: 0,
-    containerHeight: 0,
-    photoWidth: 0,
-    photoHeight: 0,
-    ifMovable: false,
-    mouseX: 0,
-    mouseY: 0,
-    standardWidth: 1440,
-    scaleNums: 1,
-    init() {
-      this.resize();
-      window.addEventListener("resize", this.resize.bind(this));
-      this.container.addEventListener("mousedown", this.onMouseDown.bind(this));
-      this.container.addEventListener("mouseup", this.onMouseUp.bind(this));
-      this.container.addEventListener("mouseleave", this.onMouseUp.bind(this));
-      this.container.addEventListener("mousemove", this.onMouseMove.bind(this));
-      this.container.addEventListener("touchstart", this.onTouchStart.bind(this));
-      this.container.addEventListener("touchend", this.onMouseUp.bind(this));
-      this.container.addEventListener("touchmove", this.onTouchMove.bind(this));
-    },
-    resize() {
-      const imgs = [...document.querySelectorAll(".photos_line_photo")];
-      this.containerWidth = this.container.offsetWidth;
-      this.containerHeight = this.container.offsetHeight;
-      this.photoWidth = imgs[0].offsetWidth;
-      this.photoHeight = imgs[0].offsetHeight;
-      this.scaleNums = document.body.offsetWidth / this.standardWidth;
-      this.container.style.transform = `scale(${this.scaleNums})`;
-      gsap.to(imgs, { transform: `translate(0,0)`, duration: 0, ease: 'power4.out' });
-      this.imgData = imgs.map(img => ({
-        node: img,
-        x: img.offsetLeft,
-        y: img.offsetTop,
-        movX: 0,
-        movY: 0,
-        ani: 0
-      }));
-    },
-    onMouseDown(event) {
-      this.ifMovable = true;
-      this.mouseX = event.clientX;
-      this.mouseY = event.clientY;
-    },
-    onMouseUp() {
-      this.ifMovable = false;
-    },
-    onMouseMove(event) {
-      this.move(event.clientX, event.clientY);
-    },
-    onTouchStart(event) {
-      this.ifMovable = true;
-      this.mouseX = event.touches[0].clientX;
-      this.mouseY = event.touches[0].clientY;
-    },
-    onTouchMove(event) {
-      this.move(event.touches[0].clientX, event.touches[0].clientY);
-    },
-    move(x, y) {
-      if (!this.ifMovable) return;
-      const distanceX = (x - this.mouseX) / this.scaleNums;
-      const distanceY = (y - this.mouseY) / this.scaleNums;
-      this.imgData.forEach(img => {
-        let duration = 1;
-        img.movX += distanceX;
-        if (img.x + img.movX > this.containerWidth) {
-          img.movX -= this.containerWidth;
-          duration = 0;
-        }
-        if (img.x + img.movX < -this.photoWidth) {
-          img.movX += this.containerWidth;
-          duration = 0;
-        }
-        img.movY += distanceY;
-        if (img.y + img.movY > this.containerHeight) {
-          img.movY -= this.containerHeight;
-          duration = 0;
-        }
-        if (img.y + img.movY < -this.photoHeight) {
-          img.movY += this.containerHeight;
-          duration = 0;
-        }
-        if (img.ani) img.ani.kill();
-        img.ani = gsap.to(img.node, {
-          transform: `translate(${img.movX}px,${img.movY}px)`,
-          duration: duration,
-          ease: 'power4.out'
-        });
-      });
-      this.mouseX = x;
-      this.mouseY = y;
-    }
-  };
-
   photobox.init();
+});
+
+onUnmounted(() => {
+  window.removeEventListener("resize", photobox.resize.bind(photobox));
+  photobox.container.removeEventListener("mousedown", photobox.onMouseDown.bind(photobox));
+  photobox.container.removeEventListener("mouseup", photobox.onMouseUp.bind(photobox));
+  photobox.container.removeEventListener("mouseleave", photobox.onMouseUp.bind(photobox));
+  photobox.container.removeEventListener("mousemove", photobox.onMouseMove.bind(photobox));
+  photobox.container.removeEventListener("touchstart", photobox.onTouchStart.bind(photobox));
+  photobox.container.removeEventListener("touchend", photobox.onMouseUp.bind(photobox));
+  photobox.container.removeEventListener("touchmove", photobox.onTouchMove.bind(photobox));
 });
 </script>
 
 <style>
-html{
+html {
   overflow: hidden;
 }
 * {
   padding: 0;
   margin: 0;
 }
-
 img {
   width: 100%;
   height: auto;
@@ -155,14 +167,12 @@ img {
   user-select: none;
   z-index: 99999;
 }
-
 div {
   display: flex;
   justify-content: center;
   align-items: center;
   user-select: none;
 }
-
 body {
   position: relative;
   display: flex;
@@ -172,21 +182,17 @@ body {
   height: 100vh;
   overflow: hidden;
 }
-
-/* homecss */
 .photos {
   position: absolute;
   flex-direction: column;
   overflow: hidden;
 }
-
 .photos_line {
   font-size: 1px;
   height: 342em;
   margin-bottom: 48em;
   flex-shrink: 0;
 }
-
 .photos_line_photo {
   display: flex;
   flex-direction: column;
@@ -199,13 +205,11 @@ body {
   overflow: hidden;
   flex-shrink: 0;
 }
-
 .photos_line_photo img {
   z-index: 999;
   background-repeat: round;
   transition: 1s;
 }
-
 .photos_line_photo h2 {
   font-size: 20px;
   transition: 0.6s;
@@ -213,28 +217,22 @@ body {
   color: #f56900;
   opacity: 0;
 }
-
 .photos_line_photo:hover h2 {
-  z-index:1;
+  z-index: 1;
   opacity: 1;
   transform: scale(1) translateY(-320%);
 }
-
 .photos_line_photo button:active {
   box-shadow: 4px 4px 12px #c5c5c5, -4px -4px 12px #ffffff;
 }
-
 @media screen and (max-aspect-ratio: 1.5/1) {
   .photos_line, .photos_line_photo {
     font-size: 2px;
   }
 }
-
 @media screen and (max-aspect-ratio: 0.8/1) {
   .photos_line, .photos_line_photo {
     font-size: 2.8px;
   }
 }
-
-
 </style>
