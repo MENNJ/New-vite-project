@@ -51,6 +51,11 @@ const routes =  [
         name: 'index',
         component: () => import('../views/index.vue'),
     },
+    {
+        path: '/InfiniteGrid',
+        name: 'InfiniteGrid',
+        component: () => import('../views/InfiniteGrid.vue'),
+    },
 
 ]
 
