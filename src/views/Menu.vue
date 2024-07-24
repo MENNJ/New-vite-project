@@ -64,7 +64,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .son {
   opacity: 0;
   animation: slideTop 1s ease forwards;
