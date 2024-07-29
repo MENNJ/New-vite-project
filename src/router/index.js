@@ -56,14 +56,6 @@ const routes =  [
         name: 'InfiniteGrid',
         component: () => import('../views/InfiniteGrid.vue'),
     },
-    {
-        path: '/navbar',
-        name: 'navbar',
-        component: () => import('../views/navbar.vue'),
-        meta:{
-            shovalues: true
-        }
-    },
 
 ]
 
