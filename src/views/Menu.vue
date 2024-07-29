@@ -1,5 +1,5 @@
 <template>
-  <div class="md:hidden">
+  <div class="md:hidden cursor-pointer pointer-events-auto">
     <div
         class="flex flex-col gap-[4.5px] cursor-pointer"
         @click="handleToggleMenu"
