@@ -1,11 +1,11 @@
 <template>
-  <div>
-    <div class=" fixed w-[150%] h-[150%] grid grid-cols-5 left-0 top-0 pr-10 pd-10 gap-10  js-grid">
-      <div class="relative" v-for="(src, index) in imageSources" :key="index">
-        <figure class="absolute p-0 inset-6  js-plane" :data-src="src"></figure>
+  <div class="dark:bg-whit">
+    <div class=" fixed w-[150%] h-[200%]  grid 2xl:grid-cols-[repeat(6,1fr)] xl:grid-cols-[repeat(4,1fr)] lg:grid-cols-[repeat(4,1fr)] md:grid-cols-[repeat(3,1fr)] grid-cols-[repeat(3,1fr)] left-0 top-0  js-grid">
+      <div v-for="(src, index) in imageSources" :key="index" class="relative">
+        <figure :data-src="src" class="absolute inset-2  js-plane"></figure>
       </div>
     </div>
-    <div class="page js-page"></div>
+    <div class="js-page"></div>
   </div>
 </template>
 
@@ -13,28 +13,37 @@
 // Import necessary libraries
 import * as THREE from 'three'; // Three.js library for 3D rendering
 import gsap from 'gsap'; // GSAP library for animations
-import { onMounted, ref } from 'vue'; // Vue.js hooks and ref function
+import { onMounted } from 'vue'; // Vue.js hooks and ref function
 
 export default {
   name: 'InteractiveGrid',
   setup() {
     // Array of image sources
     const imageSources = [
-      'https://assets.codepen.io/58281/lama-3.jpg?width=1100&format=auto',
-      'https://assets.codepen.io/58281/lama-2.jpg?width=1100&format=auto',
-      'https://assets.codepen.io/58281/lama-1.jpg?width=1100&format=auto',
-      'https://assets.codepen.io/58281/lama-3.jpg?width=1100&format=auto',
-      'https://assets.codepen.io/58281/lama-2.jpg?width=1100&format=auto',
-      'https://assets.codepen.io/58281/lama-1.jpg?width=1100&format=auto',
-      'https://assets.codepen.io/58281/lama-3.jpg?width=1100&format=auto',
-      'https://assets.codepen.io/58281/lama-2.jpg?width=1100&format=auto',
-      'https://assets.codepen.io/58281/lama-1.jpg?width=1100&format=auto',
-      'https://assets.codepen.io/58281/lama-3.jpg?width=1100&format=auto',
-      'https://assets.codepen.io/58281/lama-2.jpg?width=1100&format=auto',
-      'https://assets.codepen.io/58281/lama-1.jpg?width=1100&format=auto',
-      'https://assets.codepen.io/58281/lama-3.jpg?width=1100&format=auto',
-      'https://assets.codepen.io/58281/lama-2.jpg?width=1100&format=auto',
-      'https://assets.codepen.io/58281/lama-1.jpg?width=1100&format=auto',
+      'https://images.pexels.com/photos/18173391/pexels-photo-18173391.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+      'https://images.pexels.com/photos/24460824/pexels-photo-24460824.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+      'https://images.pexels.com/photos/21533296/pexels-photo-21533296.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+      'https://images.pexels.com/photos/3009205/pexels-photo-3009205.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+      'https://images.pexels.com/photos/27143629/pexels-photo-27143629.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+      'https://images.pexels.com/photos/27216502/pexels-photo-27216502.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+      'https://images.pexels.com/photos/27139481/pexels-photo-27139481.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+      'https://images.pexels.com/photos/17266857/pexels-photo-17266857.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+      'https://images.pexels.com/photos/5290758/pexels-photo-5290758.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+      'https://images.pexels.com/photos/5267760/pexels-photo-5267760.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+      'https://images.pexels.com/photos/1105766/pexels-photo-1105766.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+      'https://images.pexels.com/photos/425160/pexels-photo-425160.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+      'https://images.pexels.com/photos/1038935/pexels-photo-1038935.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+      'https://images.pexels.com/photos/2681319/pexels-photo-2681319.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+      'https://images.pexels.com/photos/1122409/pexels-photo-1122409.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+      'https://images.pexels.com/photos/1010079/pexels-photo-1010079.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+      'https://images.pexels.com/photos/763097/pexels-photo-763097.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+      'https://images.pexels.com/photos/711022/pexels-photo-711022.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+      'https://images.pexels.com/photos/1229102/pexels-photo-1229102.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+      'https://images.pexels.com/photos/1115204/pexels-photo-1115204.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+      'https://images.pexels.com/photos/3299386/pexels-photo-3299386.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+      'https://images.pexels.com/photos/925743/pexels-photo-925743.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+      'https://images.pexels.com/photos/1258333/pexels-photo-1258333.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+      'https://images.pexels.com/photos/1529881/pexels-photo-1529881.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
       // ... (other image sources)
     ];
 
@@ -68,16 +77,12 @@ export default {
         this.diff = 0;
 
         // 用于存储鼠标位置的滚轮和对象
-        this.wheel = { x: 0, y: 0 };
         this.on = { x: 0, y: 0 };
         this.max = { x: 0, y: 0 };
 
         this.isDragging = false;
 
-        // GSAP动画时间表
-        this.tl = gsap.timeline({ paused: true });
-
-        // 网格的DOM元素
+        // 获取DOM元素
         this.el = document.querySelector('.js-grid');
 
         // 创建一个新的Three.js场景
@@ -94,6 +99,9 @@ export default {
         this.renderer = new THREE.WebGLRenderer({ antialias: true });
         this.renderer.setSize(ww, wh);
         this.renderer.setPixelRatio(gsap.utils.clamp(1, 1.5, window.devicePixelRatio));
+
+        // 设置渲染器的背景颜色为透明
+        // this.renderer.setClearAlpha(0.0);
 
         // 将渲染器的画布附加到文档正文
         document.body.appendChild(this.renderer.domElement);
@@ -113,12 +121,11 @@ export default {
         window.addEventListener('mousemove', this.onMouseMove);
         window.addEventListener('mousedown', this.onMouseDown);
         window.addEventListener('mouseup', this.onMouseUp);
-        window.addEventListener('wheel', this.onWheel);
-
         // 添加触摸事件监听器
         window.addEventListener('touchstart', this.onTouchStart);
         window.addEventListener('touchmove', this.onTouchMove);
         window.addEventListener('touchend', this.onTouchEnd);
+
       }
 
       // 将平面添加到场景中
@@ -185,25 +192,6 @@ export default {
         this.isDragging = false;
       }
 
-      // 处理滚轮事件
-      onWheel = (e) => {
-        const { mouse, firefox } = multipliers;
-
-        this.wheel.x = e.wheelDeltaX || e.deltaX * -1;
-        this.wheel.y = e.wheelDeltaY || e.deltaY * -1;
-
-        if (isFirefox && e.deltaMode === 1) {
-          this.wheel.x *= firefox;
-          this.wheel.y *= firefox;
-        }
-
-        this.wheel.y *= mouse;
-        this.wheel.x *= mouse;
-
-        this.tx += this.wheel.x;
-        this.ty -= this.wheel.y;
-      }
-
       // 处理触摸开始事件
       onTouchStart = (e) => {
         if (this.isDragging) return;
@@ -243,85 +231,92 @@ export default {
       }
     }
 
-
     // 每个图像的平面类
     class Plane extends THREE.Object3D {
-      init(el, i) {
+      init(el) {
         this.el = el;
 
         this.x = 0;
         this.y = 0;
 
-        this.my = 1 - ((i % 5) * 0.1);
+        this.my = 1;
 
         // 定义平面几何图形和着色器材质
         this.geometry = new THREE.PlaneBufferGeometry(1, 1, 1, 1);
-// 修改 fragmentShader 以应用圆角效果
         this.material = new THREE.ShaderMaterial({
           fragmentShader: `
-    precision mediump float;
+          precision mediump float;
 
-    uniform vec2 u_res;
-    uniform vec2 u_size;
+          uniform vec2 u_res;
+          uniform vec2 u_size;
+          uniform sampler2D u_texture;
+          uniform float u_radius; // Add a uniform for the corner radius
 
-    uniform sampler2D u_texture;
+          vec2 cover(vec2 screenSize, vec2 imageSize, vec2 uv) {
+            float screenRatio = screenSize.x / screenSize.y;
+            float imageRatio = imageSize.x / imageSize.y;
 
-    float radius = 0.1;
+            vec2 newSize = screenRatio < imageRatio
+              ? vec2(imageSize.x * (screenSize.y / imageSize.y), screenSize.y)
+              : vec2(screenSize.x, imageSize.y * (screenSize.x / imageSize.x));
+            vec2 newOffset = (screenRatio < imageRatio
+              ? vec2((newSize.x - screenSize.x) / 2.0, 0.0)
+              : vec2(0.0, (newSize.y - screenSize.y) / 2.0)) / newSize;
 
-    vec2 cover(vec2 screenSize, vec2 imageSize, vec2 uv) {
-      float screenRatio = screenSize.x / screenSize.y;
-      float imageRatio = imageSize.x / imageSize.y;
+            return uv * screenSize / newSize + newOffset;
+          }
 
-      vec2 newSize = screenRatio < imageRatio
-        ? vec2(imageSize.x * (screenSize.y / imageSize.y), screenSize.y)
-        : vec2(screenSize.x, imageSize.y * (screenSize.x / imageSize.x));
-      vec2 newOffset = (screenRatio < imageRatio
-        ? vec2((newSize.x - screenSize.x) / 2.0, 0.0)
-        : vec2(0.0, (newSize.y - screenSize.y) / 2.0)) / newSize;
+          varying vec2 vUv;
 
-      return uv * screenSize / newSize + newOffset;
-    }
+          void main() {
+            vec2 uv = vUv;
+            vec2 uvCover = cover(u_res, u_size, uv);
+            vec4 texture = texture2D(u_texture, uvCover);
 
-    varying vec2 vUv;
+            // Calculate distance from the center of the plane
+            vec2 res = u_res / 2.0;
+            vec2 pos = uv * u_res;
+            vec2 dist = abs(pos - res);
 
-    void main() {
-      vec2 uv = vUv;
+            // Calculate the corner radius area
+            float radius = u_radius * min(u_res.x, u_res.y);
+            if (dist.x > (res.x - radius) && dist.y > (res.y - radius)) {
+              vec2 d = dist - (res - vec2(radius));
+              if (length(d) > radius) {
+                discard; // Discard fragments outside the rounded corners
+              }
+            }
 
-      vec2 uvCover = cover(u_res, u_size, uv);
-      vec4 texture = texture2D(u_texture, uvCover);
+            gl_FragColor = texture;
+          }`,
 
-      vec2 border = min(uvCover, 1.0 - uvCover);
-      float alpha = smoothstep(0.0, radius, min(border.x, border.y));
-
-      gl_FragColor = vec4(texture.rgb, texture.a * alpha);
-    }
-  `,
           vertexShader: `
-    precision mediump float;
+            precision mediump float;
 
-    uniform float u_diff;
+            uniform float u_diff;
 
-    varying vec2 vUv;
+            varying vec2 vUv;
 
-    void main() {
-      vec3 pos = position;
+            void main() {
+              vec3 pos = position;
 
-      pos.y *= 1. - u_diff;
-      pos.x *= 1. - u_diff;
+              pos.y *= 1. - u_diff;
+              pos.x *= 1. - u_diff;
 
-      vUv = uv;
-      gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.);
-    }
-  `,
+              vUv = uv;
+              gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.);
+            }`
+          ,
           uniforms: {
             u_texture: { value: 0 },
             u_res: { value: new THREE.Vector2(1, 1) },
             u_size: { value: new THREE.Vector2(1, 1) },
             u_diff: { value: 0 },
+            u_radius: { value: 0.05 },
           },
         });
 
-        //加载纹理并设置其属性
+        // 加载纹理并设置其属性
         this.texture = new THREE.TextureLoader().load(this.el.dataset.src, (texture) => {
           texture.minFilter = THREE.LinearFilter;
           texture.generateMipmaps = false;
@@ -334,7 +329,7 @@ export default {
           u_size.value.y = naturalHeight;
         });
 
-        //使用几何图形和材质创建网格
+        // 使用几何图形和材质创建网格
         this.mesh = new THREE.Mesh(this.geometry, this.material);
         this.add(this.mesh);
 
@@ -342,7 +337,7 @@ export default {
         this.resize();
       }
 
-      // 更新飞机的位置和制服
+      // Update plane's position and uniforms
       update = (x, y, max, diff) => {
         const { right, bottom } = this.rect;
         const { u_diff } = this.material.uniforms;
@@ -365,7 +360,7 @@ export default {
         this.position.y = this.y;
       }
 
-      // 调整大小时调整平面的大小和位置
+      // Adjust plane's size and position on resize
       resize() {
         this.rect = this.el.getBoundingClientRect();
 
@@ -384,8 +379,9 @@ export default {
         this.mesh.scale.set(width, height, 1);
       }
     }
+    document.body.classList.add('dark:bg-blue-100');
 
-    //在装载组件时创建Core类的实例
+    // 在装载组件时创建Core类的实例
     onMounted(() => {
       new Core();
     });
@@ -405,11 +401,7 @@ html {
   overflow: hidden;
 }
 
-html {
-  font-size: 1vw;
-}
-
-body  {
+body {
   height: 100%;
   width: 100%;
   overflow: hidden;
@@ -428,8 +420,8 @@ canvas {
   top: 0;
   left: 0;
   width: 100%;
-  height: auto;
+  height: 100%;
   pointer-events: none;
+  background-color: #f56900;
 }
-
 </style>
