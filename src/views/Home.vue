@@ -1,5 +1,4 @@
 <template>
-  <Nva_bar />
   <div ref="photos" class="photos dark:bg-blue-100">
     <div class="photos_line" v-for="(line, index) in lines" :key="index">
       <div class="photos_line_photo bg-white dark:bg-slate-800 ring-1 ring-slate-900/5 shadow-xl" v-for="(photo, photoIndex) in line" :key="photoIndex">
@@ -152,7 +151,7 @@ onUnmounted(() => {
 });
 </script>
 
-<style>
+<style >
 html {
   overflow: hidden;
 }
