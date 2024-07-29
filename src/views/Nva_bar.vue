@@ -1,15 +1,15 @@
 <template>
 
-  <div v-if="!$route.meta.shovalues" class="h-16  fixed top-0 w-[100vw] bg-white ring-1 ring-slate-900/5 z-[99] flex items-center justify-between dark:bg-black">
+  <div v-if="!$route.meta.shovalues" class="h-16  fixed top-0 left-0 w-[100vw] bg-white pointer-events-none ring-1 ring-slate-900/5 z-50 flex items-center justify-between dark:bg-black">
 
-    <div class="md:hidden lg:block w-[6vh]">
-      <svg class="md:ml-4 cursor-pointer  dark:text-white" height="25px" viewBox="0 0 24 24" width="25px"  xmlns="http://www.w3.org/2000/svg"><g fill="currentColor" fill-opacity="0"><circle cx="9" cy="12" r="1.5"><animate fill="freeze" attributeName="fill-opacity" begin="1.2s" dur="0.4s" values="0;1"/></circle><circle cx="15" cy="12" r="1.5"><animate fill="freeze" attributeName="fill-opacity" begin="1.4s" dur="0.4s" values="0;1"/></circle></g><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke-dasharray="30" stroke-dashoffset="30" d="M15.5 17.5L16.5 19.5C16.5 19.5 20.671 18.172 22 16C22 15 22.53 7.853 19 5.5C17.5 4.5 15 4 15 4L14 6H12M8.52799 17.5L7.52799 19.5C7.52799 19.5 3.35699 18.172 2.02799 16C2.02799 15 1.49799 7.853 5.02799 5.5C6.52799 4.5 9.02799 4 9.02799 4L10.028 6H12.028"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.6s" values="30;60"/></path><path stroke-dasharray="16" stroke-dashoffset="16" d="M5.5 16C10.5 18.5 13.5 18.5 18.5 16"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.7s" dur="0.4s" values="16;0"/></path></g></svg>
+    <div class="md:hidden lg:block flex ml-5">
+      <svg class="md:ml-4 cursor-pointer  dark:text-white" height="26px" viewBox="0 0 24 24" width="26px"  xmlns="http://www.w3.org/2000/svg"><g fill="currentColor" fill-opacity="0"><circle cx="9" cy="12" r="1.5"><animate fill="freeze" attributeName="fill-opacity" begin="1.2s" dur="0.4s" values="0;1"/></circle><circle cx="15" cy="12" r="1.5"><animate fill="freeze" attributeName="fill-opacity" begin="1.4s" dur="0.4s" values="0;1"/></circle></g><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke-dasharray="30" stroke-dashoffset="30" d="M15.5 17.5L16.5 19.5C16.5 19.5 20.671 18.172 22 16C22 15 22.53 7.853 19 5.5C17.5 4.5 15 4 15 4L14 6H12M8.52799 17.5L7.52799 19.5C7.52799 19.5 3.35699 18.172 2.02799 16C2.02799 15 1.49799 7.853 5.02799 5.5C6.52799 4.5 9.02799 4 9.02799 4L10.028 6H12.028"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.6s" values="30;60"/></path><path stroke-dasharray="16" stroke-dashoffset="16" d="M5.5 16C10.5 18.5 13.5 18.5 18.5 16"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.7s" dur="0.4s" values="16;0"/></path></g></svg>
     </div>
 
     <div class="hidden md:flex justify-center  w-[50%] text-sm ml-10 ">
       <div class=" gap-20 flex justify-center text-gray-600">
         <div class="flex  flex-col ">
-          <svg class="cursor-pointer text-black  dark:text-white" height="25px" viewBox="0 0 24 24" width="25px"
+          <svg class="cursor-pointer text-black pointer-events-auto  dark:text-white" height="25px" viewBox="0 0 24 24" width="25px"
                                             xmlns="http://www.w3.org/2000/svg">
           <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
             <path d="M5 21H19" stroke-dasharray="21" stroke-dashoffset="21">
@@ -29,7 +29,7 @@
           <span>Home</span>
         </div>
         <div class="flex flex-col ">
-         <svg class="cursor-pointer text-black  dark:text-white " height="25px" viewBox="0 0 24 24" width="25px"
+         <svg class="cursor-pointer text-black pointer-events-auto  dark:text-white " height="25px" viewBox="0 0 24 24" width="25px"
              xmlns="http://www.w3.org/2000/svg">
           <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
             <g stroke-width="2">
@@ -54,7 +54,7 @@
           <span>Order</span>
       </div>
         <div class="flex flex-col">
-        <svg class="text-black cursor-pointer  dark:text-white" height="25px" viewBox="0 0 24 24" width="25px"
+        <svg class="text-black cursor-pointer pointer-events-auto  dark:text-white" height="25px" viewBox="0 0 24 24" width="25px"
              xmlns="http://www.w3.org/2000/svg">
           <defs>
             <symbol id="lineMdCogFilledLoop0">
@@ -90,8 +90,8 @@
         </svg>
           <span>Setting</span>
         </div>
-        <div class="flex flex-col " @click="toggleTheme">
-        <svg v-if="!isIconSwitched" class="text-black cursor-pointer  dark:text-white" width="25px" height="25px"
+        <div class="flex flex-col pointer-events-auto " @click="toggleTheme">
+        <svg v-if="!isIconSwitched" class="text-black cursor-pointer pointer-events-auto  dark:text-white" width="25px" height="25px"
              viewBox="0 0 24 24"  xmlns="http://www.w3.org/2000/svg">
           <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
             <path d="M0 0">
@@ -127,7 +127,7 @@
             <animate attributeName="r" dur="0.4s" fill="freeze" values="10;6"/>
           </circle>
         </svg>
-        <svg v-else class="text-black cursor-pointer  dark:text-white" width="3vh" height="3vh" viewBox="0 0 24 24"
+        <svg v-else class="text-black cursor-pointer pointer-events-auto  dark:text-white" width="3vh" height="3vh" viewBox="0 0 24 24"
              xmlns="http://www.w3.org/2000/svg">
           <g fill="none" stroke="currentColor" stroke-dasharray="4" stroke-dashoffset="4" stroke-linecap="round"
              stroke-linejoin="round">
@@ -217,8 +217,8 @@
         <svg class="md:mr-4 text-black cursor-pointer dark:text-white" xmlns="http://www.w3.org/2000/svg" width="25px" height="25px"  viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke-dasharray="20" stroke-dashoffset="20" d="M12 5C13.66 5 15 6.34 15 8C15 9.65685 13.6569 11 12 11C10.3431 11 9 9.65685 9 8C9 6.34315 10.3431 5 12 5z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.4s" values="20;0"/></path><path stroke-dasharray="36" stroke-dashoffset="36" d="M12 14C16 14 19 16 19 17V19H5V17C5 16 8 14 12 14z" opacity="0"><set attributeName="opacity" begin="0.5s" to="1"/><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.5s" dur="0.4s" values="36;0"/></path></g></svg>
       </div>
 
-      <div class="md:hidden  " @click="toggleTheme">
-        <svg v-if="!isIconSwitched" class="text-black cursor-pointer  dark:text-white" width="25px" height="25px"
+      <div class="md:hidden cursor-pointer pointer-events-auto" @click="toggleTheme">
+        <svg v-if="!isIconSwitched" class="text-black cursor-pointer pointer-events-auto   dark:text-white" width="25px" height="25px"
              viewBox="0 0 24 24"  xmlns="http://www.w3.org/2000/svg">
           <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
             <path d="M0 0">
