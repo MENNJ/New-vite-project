@@ -1,6 +1,6 @@
 <template>
-  <div class="dark:bg-whit">
-    <div class=" fixed w-[150%] h-[200%]  grid 2xl:grid-cols-[repeat(6,1fr)] xl:grid-cols-[repeat(4,1fr)] lg:grid-cols-[repeat(4,1fr)] md:grid-cols-[repeat(3,1fr)] grid-cols-[repeat(3,1fr)] left-0 top-0  js-grid">
+  <div>
+    <div class=" fixed w-[150%] h-[200%] grid 2xl:grid-cols-[repeat(6,1fr)] xl:grid-cols-[repeat(4,1fr)] lg:grid-cols-[repeat(4,1fr)] md:grid-cols-[repeat(3,1fr)] grid-cols-[repeat(3,1fr)] landscape:grid-cols-[repeat(6,1fr)] left-0 top-0 js-grid">
       <div v-for="(src, index) in imageSources" :key="index" class="relative">
         <figure :data-src="src" class="absolute inset-2  js-plane"></figure>
       </div>
@@ -47,28 +47,22 @@ export default {
       // ... (other image sources)
     ];
 
-    // 检测浏览器是否为Firefox，操作系统是否为Windows
     const isFirefox = navigator.userAgent.indexOf('Firefox') > -1;
     const isWindows = navigator.appVersion.indexOf('Win') !== -1;
 
-    // 鼠标移动和滚轮的倍数
     const mouseMultiplier = 0.6;
     const firefoxMultiplier = 20;
 
-    // 根据操作系统调整乘数
     const multipliers = {
       mouse: isWindows ? mouseMultiplier * 2 : mouseMultiplier,
       firefox: isWindows ? firefoxMultiplier * 2 : firefoxMultiplier,
     };
 
-    // 获取初始窗口尺寸
     let ww = window.innerWidth;
     let wh = window.innerHeight;
 
-    // 用于管理场景和交互的核心类
     class Core {
       constructor() {
-        // 平滑滚动的目标和当前位置
         this.tx = 0;
         this.ty = 0;
         this.cx = 0;
@@ -76,45 +70,36 @@ export default {
 
         this.diff = 0;
 
-        // 用于存储鼠标位置的滚轮和对象
         this.on = { x: 0, y: 0 };
         this.max = { x: 0, y: 0 };
 
         this.isDragging = false;
 
-        // 获取DOM元素
         this.el = document.querySelector('.js-grid');
 
-        // 创建一个新的Three.js场景
         this.scene = new THREE.Scene();
 
-        // 创建正交摄影机
         this.camera = new THREE.OrthographicCamera(
             ww / -2, ww / 2, wh / 2, wh / -2, 1, 1000
         );
         this.camera.lookAt(this.scene.position);
         this.camera.position.z = 1;
 
-        // 创建WebGL渲染器
         this.renderer = new THREE.WebGLRenderer({ antialias: true });
         this.renderer.setSize(ww, wh);
         this.renderer.setPixelRatio(gsap.utils.clamp(1, 1.5, window.devicePixelRatio));
 
-        // 设置渲染器的背景颜色为透明
-        // this.renderer.setClearAlpha(0.0);
-
-        // 将渲染器的画布附加到文档正文
         document.body.appendChild(this.renderer.domElement);
 
-        // 将平面添加到场景中
+
         this.addPlanes();
-        // 为交互添加事件侦听器
+
         this.addEvents();
-        // 调整窗口大小
+
         this.resize();
+
       }
 
-      // 添加事件侦听器
       addEvents() {
         gsap.ticker.add(this.tick);
 
@@ -125,10 +110,8 @@ export default {
         window.addEventListener('touchstart', this.onTouchStart);
         window.addEventListener('touchmove', this.onTouchMove);
         window.addEventListener('touchend', this.onTouchEnd);
-
       }
 
-      // 将平面添加到场景中
       addPlanes() {
         const planes = [...document.querySelectorAll('.js-plane')];
 
@@ -141,8 +124,6 @@ export default {
           return plane;
         });
       }
-
-      // 用于渲染场景的动画循环
       tick = () => {
         const xDiff = this.tx - this.cx;
         const yDiff = this.ty - this.cy;
@@ -167,7 +148,6 @@ export default {
         this.renderer.render(this.scene, this.camera);
       }
 
-      // 处理鼠标移动事件
       onMouseMove = ({ clientX, clientY }) => {
         if (!this.isDragging) return;
 
@@ -175,7 +155,6 @@ export default {
         this.ty = this.on.y - clientY * 2.5;
       }
 
-      // 处理鼠标按下事件
       onMouseDown = ({ clientX, clientY }) => {
         if (this.isDragging) return;
 
@@ -185,14 +164,12 @@ export default {
         this.on.y = this.ty + clientY * 2.5;
       }
 
-      // 处理鼠标向上事件
       onMouseUp = () => {
         if (!this.isDragging) return;
 
         this.isDragging = false;
       }
 
-      // 处理触摸开始事件
       onTouchStart = (e) => {
         if (this.isDragging) return;
 
@@ -203,7 +180,6 @@ export default {
         this.on.y = this.ty + touch.clientY * 2.5;
       }
 
-      // 处理触摸移动事件
       onTouchMove = (e) => {
         if (!this.isDragging) return;
 
@@ -212,14 +188,12 @@ export default {
         this.ty = this.on.y - touch.clientY * 2.5;
       }
 
-      // 处理触摸结束事件
       onTouchEnd = () => {
         if (!this.isDragging) return;
 
         this.isDragging = false;
       }
 
-      // 处理窗口大小调整事件
       resize = () => {
         ww = window.innerWidth;
         wh = window.innerHeight;
@@ -231,17 +205,13 @@ export default {
       }
     }
 
-    // 每个图像的平面类
     class Plane extends THREE.Object3D {
       init(el) {
         this.el = el;
-
         this.x = 0;
         this.y = 0;
-
         this.my = 1;
 
-        // 定义平面几何图形和着色器材质
         this.geometry = new THREE.PlaneBufferGeometry(1, 1, 1, 1);
         this.material = new THREE.ShaderMaterial({
           fragmentShader: `
@@ -312,11 +282,10 @@ export default {
             u_res: { value: new THREE.Vector2(1, 1) },
             u_size: { value: new THREE.Vector2(1, 1) },
             u_diff: { value: 0 },
-            u_radius: { value: 0.05 },
+            u_radius: { value: 0.1 },
           },
         });
 
-        // 加载纹理并设置其属性
         this.texture = new THREE.TextureLoader().load(this.el.dataset.src, (texture) => {
           texture.minFilter = THREE.LinearFilter;
           texture.generateMipmaps = false;
@@ -329,15 +298,12 @@ export default {
           u_size.value.y = naturalHeight;
         });
 
-        // 使用几何图形和材质创建网格
         this.mesh = new THREE.Mesh(this.geometry, this.material);
         this.add(this.mesh);
 
-        // 调整平面的大小和位置
         this.resize();
       }
 
-      // Update plane's position and uniforms
       update = (x, y, max, diff) => {
         const { right, bottom } = this.rect;
         const { u_diff } = this.material.uniforms;
@@ -359,8 +325,6 @@ export default {
         this.position.x = this.x;
         this.position.y = this.y;
       }
-
-      // Adjust plane's size and position on resize
       resize() {
         this.rect = this.el.getBoundingClientRect();
 
@@ -379,9 +343,6 @@ export default {
         this.mesh.scale.set(width, height, 1);
       }
     }
-    document.body.classList.add('dark:bg-blue-100');
-
-    // 在装载组件时创建Core类的实例
     onMounted(() => {
       new Core();
     });
@@ -422,6 +383,5 @@ canvas {
   width: 100%;
   height: 100%;
   pointer-events: none;
-  background-color: #f56900;
 }
 </style>
